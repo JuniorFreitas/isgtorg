@@ -1,6 +1,6 @@
 @extends('curriculo.layout')
 @section('conteudo')
-    <div class="alert alert-success"></div>
+
     <div class="modal fade" id="dialog" data-backdrop="static" tabindex="-1" role="dialog"
          aria-labelledby="myModalLabel"
          aria-hidden="true">
@@ -19,7 +19,7 @@
             </div>
         </div>
     </div>
-
+    <br>
     <article class="container" id="conteudo">
 
         <div class="alert alert-danger abelFont" id="erro"></div>
@@ -45,7 +45,7 @@
                     <input id="cpf" name="cpf" value="{{old('cpf')}}" min="10" type="text" placeholder="Seu CPF"
                            class="form-control input-md">
                 </div>
-                <button class="btn btn-success">Consultar</button>
+                <button class="btn btn-success" id="btConsult">Consultar</button>
             </div>
         </form>
 

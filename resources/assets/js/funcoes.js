@@ -1,27 +1,45 @@
 $(function () {
     $("#erro").hide();
     $("#main-cont").hide();
-    $("#cpf").mask("999.999.999-99");
-    $("#tel").mask("(99) 9999-9999");
-    $("#inicio").mask("9999");
-    $("#inicioexp").mask("9999");
-    $("#fim").mask("9999");
-    $("#fimexp").mask("9999");
-    $("#nascimento").mask("99/99/9999");
-    $("#cep").mask("99.999-999");
-    $("#cel").mask("(99) 99999-9999");
-    botao();
+    $("#cpf").mask("999.999.999-99",{placeholder:" "});
+    $("#btConsult").attr('disabled', 'disabled');
+    $("#cpf").on("keyup",function () {
+        if (!validaCpf()) {
+            $("#btConsult").attr('disabled', 'disabled');
+        }
+        else{
+            $("#btConsult").removeAttr('disabled', 'disabled');
+        }
+    });
 });
+
+function Notify(titulo,texto,type,button,redirect) {
+    swal({
+            title: titulo,
+            text: texto,
+            type: type,
+            showCancelButton: false,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: button,
+            closeOnConfirm: false
+        },
+        function () {
+            window.location.href = redirect;
+        });
+}
 
 $("#consultaCPF").submit(function (e) {
     var url = $('#url').val();
     var _token = $('#_token').val();
     var cpf = $('#cpf').val();
+    $("#cpf").attr('disabled', 'disabled');
+    $("#btConsult").attr('disabled', 'disabled');
     if (!validaCpf()) {
         $("#main-cont").fadeOut();
         swal("CPF inválido", "", "error");
+        $("#cpf").removeAttr('disabled', 'disabled');
     } else {
-        /*$("#main-cont").fadeIn().html('Carregando...');*/
+        $("#main-cont").fadeIn().html('Carregando...');
         $.post(url + '/verificaCpf',
             {'cpf': cpf, '_token': _token},
             function (data) {
@@ -36,11 +54,16 @@ $("#consultaCPF").submit(function (e) {
                             confirmButtonText: "Alterar Curriculo",
                             showLoaderOnConfirm: true,
                         },
-                        function () {
-                            swal.close();
-                            $.get(url + '/formedit', {'cpf': cpf}, function (response) {
-                                $("#main-cont").fadeIn().html(response);
-                            });
+                        function (isConfirm) {
+                            if (isConfirm) {
+                                swal.close();
+                                $.get(url + '/formedit', {'cpf': cpf}, function (response) {
+                                    $("#main-cont").fadeIn().html(response);
+                                });
+                            }else{
+                                $("#cpf").removeAttr('disabled', 'disabled');
+                                $("#main-cont").fadeOut().html("");
+                            }
                         });
                 }
                 else {
@@ -55,69 +78,52 @@ $("#consultaCPF").submit(function (e) {
 
 $("#formCurriculo").submit(function () {
     var erro = 0;
-
     if (!validaVazio("nome", 1)) {
         erro++;
     }
-
     if (!validaVazio("nascimento", 9)) {
         erro++;
     }
-
     if (!validaVazio("cep", 9)) {
         erro++;
     }
-
     if (!validaVazio("logradouro", 1)) {
         erro++;
     }
-
     if (!validaVazio("cidade", 1)) {
         erro++;
     }
-
     if (!validaVazio("tel", 13)) {
         erro++;
     }
-
     if (!validaVazio("cel", 14)) {
         erro++;
     }
-
     /*formação*/
-
     if (!validaSelect('escolaridade')) {
         erro++;
     }
-
     /*Aperfeiçoamentos*/
-
     if (!validaVazio("curso", 1)) {
         erro++;
     }
-
     if (!validaVazio("empresa", 1)) {
         erro++;
     }
-
     if (!validaVazio("inicio", 3)) {
         erro++;
     }
-
     if (!validaVazio("fim", 3)) {
         erro++;
     }
-
     /*Experiencias*/
 
     if (!validaVazio("cargo", 1)) {
         erro++;
     }
-
     if (!validaVazio("empresaexp", 1)) {
         erro++;
     }
-
     if (!validaVazio("inicioexp", 3)) {
         erro++;
     }
@@ -125,8 +131,6 @@ $("#formCurriculo").submit(function () {
     if (!validaVazio("fimexp", 3)) {
         erro++;
     }
-
-
     if (!vBotao("deficiente")) {
         erro++;
     }
@@ -276,7 +280,6 @@ function botao() {
     $('#radioBtn a').on('click', function () {
         var sel = $(this).data('title');
         var tog = $(this).data('toggle');
-        alert(sel + tog);
         $('#' + tog).prop('value', sel);
         $('a[data-toggle="' + tog + '"]').not('[data-title="' + sel + '"]').removeClass('active').addClass('notActive');
         $('a[data-toggle="' + tog + '"][data-title="' + sel + '"]').removeClass('notActive').addClass('active');

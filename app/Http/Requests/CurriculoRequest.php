@@ -24,7 +24,6 @@ class CurriculoRequest extends FormRequest
     public function rules()
     {
         return [
-            'cpf' => 'required',
             'nome' => 'required',
             'foto' => 'required',
             'curriculo' => 'required',

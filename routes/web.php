@@ -20,6 +20,7 @@ Auth::routes();
 Route::group(['as' => 'trabalhe.', 'prefix' => 'trabalheconosco'], function () {
     Route::get('/', ['as' => 'index', 'uses' => 'CurriculoController@index']);
     Route::post('/cadastrar', ['as' => 'cadastrar', 'uses' => 'CurriculoController@cadCurriculo']);
+    Route::post('/update', ['as' => 'update', 'uses' => 'CurriculoController@update']);
     Route::get('/cadastrado', ['as' => 'concluido', 'uses' => 'CurriculoController@cadastrado']);
     Route::get('/error', ['as' => 'error', 'uses' => 'CurriculoController@error']);
     Route::post('/verificaCpf', ['as' => 'verificaCpf', 'uses' => 'CurriculoController@verificaCpf']);

@@ -1,9 +1,10 @@
-{{print_r($resultsEsc[0])}}
 <h3 class="abelFont">Dados Pessoais</h3>
 <hr>
 <form id="formCurriculo" method="post" class="form-horizontal abelFont" style="font-size: 1.1em;"
-      action="{{route('trabalhe.cadastrar')}}" enctype="multipart/form-data">
+      action="{{route('trabalhe.update')}}" enctype="multipart/form-data">
     <input type="hidden" name="_token" id="_token" value="{{csrf_token()}}">
+    <input type="hidden" name="id" id="id" value="{{$resultsD[0]->id}}">
+    <input type="hidden" name="cpf" id="cpf" value="{{$resultsD[0]->cpf}}">
     <div class="form-group" id="vnome">
         <label class="col-md-4 control-label" for="Nome:">Nome:</label>
         <div class="col-md-6">
@@ -16,11 +17,12 @@
     <div class="form-group" id="vnascimento">
         <label class="col-md-4 control-label" for="Nascimento:">Nascimento:</label>
         <div class="col-md-6">
-            <input id="nascimento" name="nascimento" value="{{old('nascimento')}}" min="3" type="text"
+            <input id="nascimento" name="nascimento" value="{{$resultsD[0]->dataNascimento()}}" min="3" type="text"
                    placeholder="Sua Data de Nascimento"
                    class="form-control input-md">
         </div>
     </div>
+
 
     <div class="form-group" id="vcep">
         <label class="col-md-4 control-label" for="CEP:">CEP:</label>
@@ -180,14 +182,17 @@
     <h3 class="abelFont ">Outras Informações</h3>
     <hr>
 
-
     <div class="form-group" id="edeficiente">
         <label for="happy" class="col-sm-4 col-md-4 control-label text-right">Possui Deficiência?</label>
         <div class="col-sm-7 col-md-7">
-            <select name="deficiente" class="form-control input-md" id="deficiente">
-                <option value="{{($resultsD[0]->deficiente =='Sim' ? $resultsD[0]->deficiente  : 'Sim')}}" {{($resultsD[0]->deficiente == 'Sim' ? 'selected' : '')}}>{{($resultsD[0]->deficiente == 'Sim'  ? $resultsD[0]->deficiente : 'Sim')}}</option>
-                <option value="{{($resultsD[0]->deficiente =='Não' ? $resultsD[0]->deficiente  : 'Não')}}" {{($resultsD[0]->deficiente == 'Não' ? 'selected' : '')}}>{{($resultsD[0]->deficiente == 'Não'? $resultsD[0]->deficiente: 'Não')}}</option>
-            </select>
+            <div class="input-group">
+                <div id="radioBtn" class="btn-group deficiente">
+                    <a class="btn btn-info btn-sm {{($resultsD[0]->deficiente =='sim' ? "active" : 'notActive')}}" data-toggle="deficiente"
+                       data-title="sim">Sim</a><a
+                            class="btn btn-info btn-sm {{($resultsD[0]->deficiente =='nao' ? "active" : 'notActive')}}" data-toggle="deficiente" data-title="nao">Não</a>
+                </div>
+                <input type="hidden" value="{{($resultsD[0]->deficiente =='sim' ? $resultsD[0]->deficiente  : 'nao')}}" name="deficiente" id="deficiente">
+            </div>
         </div>
     </div>
     <div class="form-group" id="eviajar">
@@ -196,11 +201,11 @@
         <div class="col-sm-7 col-md-7">
             <div class="input-group">
                 <div id="radioBtn" class="btn-group viajar">
-                    <a class="btn btn-info btn-sm notActive" data-toggle="viajar" data-title="sim">Sim</a><a
-                            class="btn btn-info btn-sm notActive" data-toggle="viajar"
+                    <a class="btn btn-info btn-sm {{($resultsD[0]->viajar =='sim' ? "active" : 'notActive')}}" data-toggle="viajar" data-title="sim">Sim</a><a
+                            class="btn btn-info btn-sm {{($resultsD[0]->viajar =='nao' ? "active" : 'notActive')}}" data-toggle="viajar"
                             data-title="nao">Não</a>
                 </div>
-                <input type="hidden" value="{{old('viajar')}}" name="viajar" id="viajar">
+                <input type="hidden" value="{{($resultsD[0]->viajar =='sim' ? $resultsD[0]->viajar  : 'nao')}}" name="viajar" id="viajar">
             </div>
         </div>
     </div>
@@ -215,3 +220,16 @@
 
     <button class="btn btn-info col-lg-offset-4" style="margin-bottom: 1.3em">Enviar Currículo</button>
 </form>
+<script>
+    $(function () {
+        botao();
+        $("#tel").mask("(99) 9999-9999",{placeholder:" "});
+        $("#inicio").mask("9999",{placeholder:" "});
+        $("#inicioexp").mask("9999",{placeholder:" "});
+        $("#fim").mask("9999",{placeholder:" "});
+        $("#fimexp").mask("9999",{placeholder:" "});
+        $("#nascimento").mask("99/99/9999",{placeholder:" "});
+        $("#cep").mask("99.999-999",{placeholder:" "});
+        $("#cel").mask("(99) 99999-9999",{placeholder:" "});
+    });
+</script>

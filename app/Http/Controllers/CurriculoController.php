@@ -118,6 +118,69 @@ class CurriculoController extends Controller
         return redirect()->route('trabalhe.concluido', ['id' => $this->modelCurriculo->id]);
     }
 
+    public function update(CurriculoRequest $request, Canvas $canvas)
+    {
+        $queryCurriculo = $this->modelCurriculo->select()->where("id", $request->input('id'))->get();
+        if (count($queryCurriculo) == 1) {
+            $Data = new DataHora($request->input('nascimento'));
+            $foto = $request->file('foto');
+            $curriculo = $request->file('curriculo');
+            $nomeAnexo = str_slug($request->input('nome') . '-' . $request->input('cpf')) . '.';
+            if ($request->hasFile('foto')):
+                $foto->move('curriculo/fotos', $nomeAnexo . $foto->getClientOriginalExtension());
+                $nomeI = asset('curriculo/fotos/' . $nomeAnexo . $foto->getClientOriginalExtension());
+                $novoNome = "__" . $nomeAnexo . $foto->getClientOriginalExtension();
+                $pasta = 'curriculo/fotos/' . $novoNome;
+                $canvas->carregaUrl($nomeI)->redimensiona('480', '')->grava($pasta, 90);
+                unlink('curriculo/fotos/' . $nomeAnexo . $foto->getClientOriginalExtension());
+            endif;
+            if ($request->hasFile('curriculo')):
+                $curriculo->move('curriculo', $nomeAnexo . $curriculo->getClientOriginalExtension());
+                $anexoCurriculo = $nomeAnexo . $curriculo->getClientOriginalExtension();
+            endif;
+
+            $queryCurriculo->update([
+                'nome' => $request->input('nome'),
+                'nascimento' => $Data->dataInsert(),
+                'cep' => $request->input('cep'),
+                'logradouro' => $request->input('logradouro'),
+                'cidade' => $request->input('cidade'),
+                'telefone' => $request->input('tel'),
+                'celular' => $request->input('cel'),
+                'email' => $request->input('email'),
+                'foto' => $novoNome,
+                'deficiente' => $request->input('deficiente'),
+                'viajar' => $request->input('viajar'),
+                'anexo' => $anexoCurriculo,
+            ]);
+
+            $queryCursos = $this->modelCursos->select()->where("id_curriculos", $request->input('id'))->get();
+            $queryCursos->update([
+                'curso' => $request->input('curso'),
+                'empresa' => $request->input('empresa'),
+                'inicio' => $request->input('inicio'),
+                'termino' => $request->input('fim'),
+            ]);
+
+            $queryEscolaridade = $this->modelEscolaridade->select()->where("id_curriculos", $request->input('id'))->get();
+            $queryEscolaridade->update([
+                'escolaridade' => $request->input('escolaridade'),
+            ]);
+
+            $queryExperiencia = $this->modelExperiencia->select()->where("id_curriculos", $request->input('id'))->get();
+            $queryExperiencia->update([
+                'cargo' => $request->input('cargo'),
+                'empresa' => $request->input('empresaexp'),
+                'inicio' => $request->input('inicioexp'),
+                'fim' => $request->input('fimexp'),
+            ]);
+            return redirect()->route('trabalhe.concluido', ['id' => $request->input('id')]);
+        } else {
+
+        }
+
+    }
+
     public function cadastrado(Request $request)
     {
         $BuscaRegistro = $this->modelCurriculo->select()->where('id', $request->get('id'))->get();

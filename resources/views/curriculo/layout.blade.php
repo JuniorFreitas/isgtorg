@@ -6,7 +6,6 @@
     <title>ISGT CADASTRO DE PROFISSIONAIS</title>
     <link rel="stylesheet" href="{{elixir('css/site.css')}}">
     <link href='http://fonts.googleapis.com/css?family=Abel' rel='stylesheet' type='text/css'>
-
 </head>
 <body>
 <body style="background: #f8f8f8">
@@ -18,6 +17,7 @@
     <p class="text-center" style="color: #333; margin-top: 1em">Desenvolvido por ISGT &copy; {{date('Y')}} </p>
 </footer>
 <script src="{{elixir('js/site.js')}}"></script>
+@yield('script')
 @if ( Config::get('app.debug') )
     <script type="text/javascript">
         document.write('<script src="//localhost:35729/livereload.js?snipver=1" type="text/javascript"><\/script>')

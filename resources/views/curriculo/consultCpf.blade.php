@@ -188,7 +188,6 @@
     <h3 class="abelFont ">Outras Informações</h3>
     <hr>
 
-
     <div class="form-group" id="edeficiente">
         <label for="happy" class="col-sm-4 col-md-4 control-label text-right">Possui Deficiência?</label>
         <div class="col-sm-7 col-md-7">
@@ -227,3 +226,17 @@
 
     <button class="btn btn-info col-lg-offset-4" style="margin-bottom: 1.3em">Enviar Currículo</button>
 </form>
+
+<script>
+    $(function () {
+        botao();
+        $("#tel").mask("(99) 9999-9999",{placeholder:" "});
+        $("#inicio").mask("9999",{placeholder:" "});
+        $("#inicioexp").mask("9999",{placeholder:" "});
+        $("#fim").mask("9999",{placeholder:" "});
+        $("#fimexp").mask("9999",{placeholder:" "});
+        $("#nascimento").mask("99/99/9999",{placeholder:" "});
+        $("#cep").mask("99.999-999",{placeholder:" "});
+        $("#cel").mask("(99) 99999-9999",{placeholder:" "});
+    });
+</script>

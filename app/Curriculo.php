@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Helper\DataHora;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -14,5 +15,11 @@ class Curriculo extends Model
     ];
     protected $guarded = 'id';
     protected $dates = ['create_at', 'update_at', 'delete_at'];
+
+    public function dataNascimento()
+    {
+        $data = new DataHora($this->nascimento);
+        return $data->dataCompleta();
+    }
 
 }
